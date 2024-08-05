@@ -138,7 +138,6 @@ export default function LeadForm() {
                 <option value={`dead lead`}>Dead Lead</option>
               </select>
             </div>
-
             {status === "callback" && (
               <>
                 <div>

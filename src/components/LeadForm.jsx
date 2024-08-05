@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { addLeadAsync } from "../redux/slices/leadForm";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function LeadForm() {
   const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -14,6 +17,7 @@ export default function LeadForm() {
 
   const handleSubmitForm = (data) => {
     console.log(data, "kd here");
+    dispatch(addLeadAsync(data));
 
     reset();
   };

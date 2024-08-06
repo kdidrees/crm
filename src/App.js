@@ -1,8 +1,12 @@
 import "./App.css";
-import LeadForm from "./components/LeadForm";
+import Bulkimport from "./components/Bulkimport";
 
 function App() {
-  return <LeadForm />;
+  return (
+    <>
+      <Bulkimport />
+    </>
+  );
 }
 
 export default App;

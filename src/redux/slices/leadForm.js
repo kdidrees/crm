@@ -18,6 +18,21 @@ export const addLeadAsync = createAsyncThunk(
   }
 );
 
+export const bulkUploadAsync = createAsyncThunk(
+  "leads/bulkUploadAsync",
+  async (file, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/leads/upload",
+        file
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err?.msg);
+    }
+  }
+);
+
 export const leadSlice = createSlice({
   name: "leads",
   initialState: {
@@ -41,6 +56,18 @@ export const leadSlice = createSlice({
         state.leads.push(action.payload);
       })
       .addCase(addLeadAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(bulkUploadAsync.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(bulkUploadAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.leads = action.payload;
+      })
+      .addCase(bulkUploadAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

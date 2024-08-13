@@ -18,7 +18,7 @@ export default function Bulkimport() {
   const handleDrop = (file) => {
     setFile(file);
     readFile(file)
-      .then((data) => setPreviewData(data.slice(0, 6))) // Limit to first 6 rows
+      .then((data) => setPreviewData(data))
       .catch((err) => {
         console.log("err reading file", err);
       });
@@ -72,24 +72,24 @@ export default function Bulkimport() {
         </div>
 
         {previewData.length > 0 && (
-          <div className="mt-6">
+          <div className="mt-6 mx-20">
             <h2 className="text-xl font-semibold mb-2">Preview</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-gray-100 border border-gray-300">
+            <div className="overflow-auto h-64">
+              <table className="min-w-full bg-gray-100 border border-gray-300 ">
                 <thead>
-                  <tr className="bg-gray-200">
+                  <tr className="bg-gray-20">
                     {previewData[0].map((header, index) => (
-                      <th key={index} className="py-2 px-4 border-b">
+                      <th key={index} className="py-2 px-4 border-b  ">
                         {header}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="h-36 overflow-y-auto">
                   {previewData.slice(1).map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {row.map((cell, cellIndex) => (
-                        <td key={cellIndex} className="py-2 px-4 border-b">
+                        <td key={cellIndex} className="py-2 px-4 border-b ">
                           {cell}
                         </td>
                       ))}

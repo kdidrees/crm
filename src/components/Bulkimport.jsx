@@ -9,6 +9,8 @@ export default function Bulkimport() {
   const [previewData, setPreviewData] = useState([]);
   const dispatch = useDispatch();
 
+  console.log(previewData, "kd preview");
+
   // Set up dropzone
   const { getRootProps, getInputProps } = useDropzone({
     accept: [".xlsx", ".xls"],
@@ -22,16 +24,6 @@ export default function Bulkimport() {
       .catch((err) => {
         console.log("err reading file", err);
       });
-  };
-
-  const handleUpload = async () => {
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    // dispatch the action for bulk upload
-    dispatch(bulkUploadAsync(formData));
   };
 
   const readFile = (file) => {
@@ -59,6 +51,16 @@ export default function Bulkimport() {
     });
   };
 
+  const handleUpload = async () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // dispatch the action for bulk upload
+    dispatch(bulkUploadAsync(formData));
+  };
+
   return (
     <div>
       <form>
@@ -79,14 +81,27 @@ export default function Bulkimport() {
                 <thead className="rounded-xl">
                   <tr className="bg-gray-20">
                     {previewData[0].map((header, index) => (
-                      <th key={index} className={`py-2 px-4 border-b  `}>
-                        {header}
+                      <th
+                        key={index}
+                        className={`py-2 px-4 border-b bg-black `}
+                      >
+                        <select className="bg-black sticky text-white">
+                          <option disabled selected>
+                            {header}
+                          </option>
+                          <option value="name">Name</option>
+                          <option value="status">Status</option>
+                          <option value="company">Company</option>
+                          <option value="title">Title</option>
+                          <option value="email">Email</option>
+                          <option value="phone">Phone</option>
+                        </select>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="h-36 overflow-y-auto ">
-                  {previewData.slice(1).map((row, rowIndex) => (
+                  {previewData.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {row.map((cell, cellIndex) => (
                         <td

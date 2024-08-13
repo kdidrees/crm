@@ -64,7 +64,7 @@ export default function Bulkimport() {
       <form>
         <h1>Bulk Import</h1>
 
-        <div {...getRootProps()} className="dropzone">
+        <div {...getRootProps()} className="dropzone mx-48">
           <input {...getInputProps()} />
           <p>
             Drag & drop an Excel file here, or click to select one (.xls, .xlsx)
@@ -74,22 +74,27 @@ export default function Bulkimport() {
         {previewData.length > 0 && (
           <div className="mt-6 mx-20">
             <h2 className="text-xl font-semibold mb-2">Preview</h2>
-            <div className="overflow-auto h-64">
-              <table className="min-w-full bg-gray-100 border border-gray-300 ">
-                <thead>
+            <div className="overflow-auto h-64 flex justify-center">
+              <table className=" bg-white border border-gray-300 rounded-xl">
+                <thead className="rounded-xl">
                   <tr className="bg-gray-20">
                     {previewData[0].map((header, index) => (
-                      <th key={index} className="py-2 px-4 border-b  ">
+                      <th key={index} className={`py-2 px-4 border-b  `}>
                         {header}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="h-36 overflow-y-auto">
+                <tbody className="h-36 overflow-y-auto ">
                   {previewData.slice(1).map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {row.map((cell, cellIndex) => (
-                        <td key={cellIndex} className="py-2 px-4 border-b ">
+                        <td
+                          key={cellIndex}
+                          className={`py-2 px-4 border-b ${
+                            rowIndex % 2 === 0 ? "bg-blue-200" : "bg-white"
+                          }`}
+                        >
                           {cell}
                         </td>
                       ))}

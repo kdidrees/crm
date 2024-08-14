@@ -7,9 +7,9 @@ import * as XLSX from "xlsx";
 export default function Bulkimport() {
   const [file, setFile] = useState(null);
   const [previewData, setPreviewData] = useState([]);
+  const [selectedHeaders, setSelectedHeaders] = useState({});
+  const [formErrors, setFormErrors] = useState({});
   const dispatch = useDispatch();
-
-  console.log(previewData, "kd preview");
 
   // Set up dropzone
   const { getRootProps, getInputProps } = useDropzone({
@@ -54,11 +54,38 @@ export default function Bulkimport() {
   const handleUpload = async () => {
     if (!file) return;
 
+    // validate if all headers are selected
+
+    const requriedHeaders = previewData[0].map((_, index) => index);
+    const errors = {};
+    requriedHeaders.forEach((index) => {
+      if (!selectedHeaders[index]) {
+        errors[index] = "This field is required";
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
+
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("headers", JSON.stringify(selectedHeaders)); // add selected headers
 
     // dispatch the action for bulk upload
     dispatch(bulkUploadAsync(formData));
+
+    console.log(formData, "kd formdata here");
+  };
+
+  const handleHeaderChange = (index, value) => {
+    setSelectedHeaders((prev) => ({
+      ...prev,
+      [index]: value,
+    }));
   };
 
   return (
@@ -85,7 +112,14 @@ export default function Bulkimport() {
                         key={index}
                         className={`py-2 px-4 border-b bg-black `}
                       >
-                        <select className="bg-black sticky text-white">
+                        <select
+                          onChange={(e) =>
+                            handleHeaderChange(index, e.target.value)
+                          }
+                          required
+                          value={selectedHeaders[header]}
+                          className="bg-black  text-white"
+                        >
                           <option disabled selected>
                             {header}
                           </option>
@@ -96,6 +130,11 @@ export default function Bulkimport() {
                           <option value="email">Email</option>
                           <option value="phone">Phone</option>
                         </select>
+                        {formErrors[index] && (
+                          <p className="text-red-500 text-xs">
+                            {formErrors[index]}
+                          </p>
+                        )}
                       </th>
                     ))}
                   </tr>

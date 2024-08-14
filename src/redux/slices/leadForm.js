@@ -20,11 +20,11 @@ export const addLeadAsync = createAsyncThunk(
 
 export const bulkUploadAsync = createAsyncThunk(
   "leads/bulkUploadAsync",
-  async (file, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/leads/upload",
-        file
+        formData
       );
       return response.data;
     } catch (err) {

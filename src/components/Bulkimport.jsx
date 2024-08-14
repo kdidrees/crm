@@ -89,15 +89,28 @@ export default function Bulkimport() {
   };
 
   return (
-    <div>
+    <div className="">
       <form>
         <h1>Bulk Import</h1>
 
-        <div {...getRootProps()} className="dropzone mx-48">
-          <input {...getInputProps()} />
-          <p>
-            Drag & drop an Excel file here, or click to select one (.xls, .xlsx)
-          </p>
+        <div className="flex justify-center">
+          <div {...getRootProps()} className="dropzone mx-48">
+            <input {...getInputProps()} />
+            <div className="flex justify-center">
+              <div
+                className={`mt-4 py-2 px-4 rounded-lg text-white font-semibold 
+            bg-[#007f9b] 
+              
+            `}
+              >
+                Browse
+              </div>
+            </div>
+            <h2 className=" mt-4 text-white font-bold text-xl">or drag and drop a CSV file</h2>
+            <p className="">
+              (.csv, .xlsx, and .xls file types are supported)
+            </p>
+          </div>
         </div>
 
         {previewData.length > 0 && (
@@ -168,7 +181,7 @@ export default function Bulkimport() {
             className={`mt-6 py-2 px-4 rounded-lg text-white font-semibold ${
               file
                 ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-gray-300 cursor-not-allowed"
+                : "hidden"
             }`}
           >
             Import

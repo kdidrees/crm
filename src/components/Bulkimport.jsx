@@ -88,42 +88,64 @@ export default function Bulkimport() {
     }));
   };
 
+  const options = ["Name", "Status", "company", "title", "email", "phone"];
+
+  // filter out already selected options
+
+  const filteredOptions = (index) =>
+    options.filter(
+      (option) =>
+        !Object.values(selectedHeaders).includes(option.toLocaleLowerCase()) ||
+        (selectedHeaders[index] &&
+          selectedHeaders[index] === option.toLocaleLowerCase())
+    );
+
   return (
     <div className="">
       <form>
         <h1>Bulk Import</h1>
 
-        <div className="flex justify-center">
-          <div {...getRootProps()} className="dropzone mx-48">
-            <input {...getInputProps()} />
-            <div className="flex justify-center">
-              <div
-                className={`mt-4 py-2 px-4 rounded-lg text-white font-semibold 
-            bg-[#007f9b] 
-              
-            `}
-              >
-                Browse
+        {!previewData.length && (
+          <div className="flex justify-center">
+            <div {...getRootProps()} className="dropzone mx-48">
+              <input {...getInputProps()} />
+              <div className="flex justify-center">
+                <div
+                  className={`mt-4 py-2 px-4 rounded-lg text-white font-semibold 
+           bg-[#007f9b] 
+             
+           `}
+                >
+                  Browse
+                </div>
               </div>
+              <h2 className=" mt-4 text-white font-bold text-xl">
+                or drag and drop a CSV file
+              </h2>
+              <p className="">
+                (.csv, .xlsx, and .xls file types are supported)
+              </p>
             </div>
-            <h2 className=" mt-4 text-white font-bold text-xl">or drag and drop a CSV file</h2>
-            <p className="">
-              (.csv, .xlsx, and .xls file types are supported)
-            </p>
           </div>
-        </div>
-
+        )}
         {previewData.length > 0 && (
           <div className="mt-6 mx-20">
-            <h2 className="text-xl font-semibold mb-2">Preview</h2>
+            <h2 className=" mt-4 text-white text-center font-bold text-xl">
+              Here is a preview of columns that will be imported
+            </h2>
+            <p className="text-center text-white">
+              Review them and match or exclude relevant ones before we finish
+              the import
+            </p>
+            <h2 className="text-xl font-semibold mb-2 text-white">Preview</h2>
             <div className="overflow-auto h-64 flex justify-center">
-              <table className=" bg-white border border-gray-300 rounded-xl">
+              <table className=" bg-white border-[1px] border-gray-100 rounded-xl">
                 <thead className="rounded-xl">
                   <tr className="bg-gray-20">
                     {previewData[0].map((header, index) => (
                       <th
                         key={index}
-                        className={`py-2 px-4 border-b bg-black `}
+                        className={`py-2 px-4 border-b bg-[#30324e] `}
                       >
                         <select
                           onChange={(e) =>
@@ -131,20 +153,20 @@ export default function Bulkimport() {
                           }
                           required
                           value={selectedHeaders[header]}
-                          className="bg-black  text-white"
+                          className="bg-[#30324e] text-xs text-white"
                         >
                           <option disabled selected>
                             {header}
                           </option>
-                          <option value="name">Name</option>
-                          <option value="status">Status</option>
-                          <option value="company">Company</option>
-                          <option value="title">Title</option>
-                          <option value="email">Email</option>
-                          <option value="phone">Phone</option>
+
+                          {filteredOptions(index).map((option) => (
+                            <option value={option.toLocaleLowerCase()}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                         {formErrors[index] && (
-                          <p className="text-red-500 text-xs">
+                          <p className="text-red-500 text-xs mt-2">
                             {formErrors[index]}
                           </p>
                         )}
@@ -158,8 +180,8 @@ export default function Bulkimport() {
                       {row.map((cell, cellIndex) => (
                         <td
                           key={cellIndex}
-                          className={`py-2 px-4 border-b ${
-                            rowIndex % 2 === 0 ? "bg-blue-200" : "bg-white"
+                          className={`py-2 px-4 border-b text-white text-xs  ${
+                            rowIndex % 2 === 0 ? "bg-[#282c34]" : "bg-[#282c34]"
                           }`}
                         >
                           {cell}
@@ -179,9 +201,7 @@ export default function Bulkimport() {
             onClick={handleUpload}
             disabled={!file}
             className={`mt-6 py-2 px-4 rounded-lg text-white font-semibold ${
-              file
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "hidden"
+              file ? "bg-blue-500 hover:bg-blue-600" : "hidden"
             }`}
           >
             Import

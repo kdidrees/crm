@@ -84,21 +84,38 @@ export default function Bulkimport() {
   const handleHeaderChange = (index, value) => {
     setSelectedHeaders((prev) => ({
       ...prev,
-      [index]: value,
+      [index]: value, // Store the value without modifying its case
     }));
   };
 
-  const options = ["Name", "Status", "company", "title", "email", "phone"];
+
+  const options = [
+    "title",
+    "owner",
+    "contactPerson",
+    "currency",
+    "value",
+    "organization",
+    "sourceChannel",
+    "sourceOrigin",
+    "sourceChannelId",
+    "sourceOriginId",
+  ];
 
   // filter out already selected options
-
-  const filteredOptions = (index) =>
-    options.filter(
-      (option) =>
-        !Object.values(selectedHeaders).includes(option.toLocaleLowerCase()) ||
-        (selectedHeaders[index] &&
-          selectedHeaders[index] === option.toLocaleLowerCase())
+  const filteredOptions = (index) => {
+    // Get the currently selected headers in lower case for consistent comparison
+    const selectedHeadersLowercase = Object.values(selectedHeaders).map(
+      (value) => value.toLowerCase()
     );
+  
+    // Filter out the already selected options (compare in lowercase)
+    return options.filter(
+      (option) =>
+        !selectedHeadersLowercase.includes(option.toLowerCase()) ||
+        (selectedHeaders[index] && selectedHeaders[index].toLowerCase() === option.toLowerCase())
+    );
+  };
 
   return (
     <div className="">
@@ -129,7 +146,7 @@ export default function Bulkimport() {
           </div>
         )}
         {previewData.length > 0 && (
-          <div className="mt-6 mx-20">
+          <div className="mt-6 mx-8">
             <h2 className=" mt-4 text-white text-center font-bold text-xl">
               Here is a preview of columns that will be imported
             </h2>
@@ -160,9 +177,7 @@ export default function Bulkimport() {
                           </option>
 
                           {filteredOptions(index).map((option) => (
-                            <option value={option.toLocaleLowerCase()}>
-                              {option}
-                            </option>
+                            <option value={option}>{option}</option>
                           ))}
                         </select>
                         {formErrors[index] && (
@@ -174,7 +189,7 @@ export default function Bulkimport() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="h-36 overflow-y-auto ">
+                <tbody className="h-36 overflow-y-auto w-full overflow-x-auto ">
                   {previewData.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {row.map((cell, cellIndex) => (
